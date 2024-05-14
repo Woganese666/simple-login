@@ -1,23 +1,12 @@
-# Importing the random module for generating random values
-import random
+import random #Importing the random module for generating random values
+import string #Importing the string module for string-related operations
+import time #Importing the time module for time-related operations
 
-# Importing the string module for string-related operations
-import string
+existing_users_file = "accounts.txt" #File name to store existing user information
+user_credentials = {'admin': 'admin'} #Dictionary to store username-password pairs
+user_roles = {'admin': 'admin'} #Dictionary to store user roles
 
-# Importing the time module for time-related operations
-import time
-
-# File name to store existing user information
-existing_users_file = "accounts.txt"
-
-# Dictionary to store username-password pairs
-user_credentials = {'admin': 'admin'}
-
-# Dictionary to store user roles
-user_roles = {'admin': 'admin'}
-
-# Function to generate a random password
-def generate_password(length=10, use_letters=True, use_digits=True, use_symbols=True):
+def generate_password(length=10, use_letters=True, use_digits=True, use_symbols=True): # Function to generate a random password
     characters = ''
 
     if use_letters:
@@ -28,9 +17,7 @@ def generate_password(length=10, use_letters=True, use_digits=True, use_symbols=
         characters += string.punctuation
     password = ''.join(random.choice(characters) for i in range(length))
     return password
-
-# Function to load existing users from the file and check if the username already exists
-def check_existing_users(username):
+def check_existing_users(username):  #Function to load existing users from the file and check if the username already exists
     with open(existing_users_file, "r") as file:
         for line in file:
             parts = line.strip().split()
@@ -40,25 +27,14 @@ def check_existing_users(username):
             if user == username:
                 return True
     return False
-
-# Function to save a new user to the file
-def save_user(username, password):
+def save_user(username, password): #Function to save a new user to the file
     with open(existing_users_file, "a") as file:
         file.write(f"{username} {password}\n")
-
-# Function to change the password for a user
-def change_password(username):
-    new_password = input("Enter your new password: ")
-    user_credentials[username] = new_password
-    print("Password changed successfully!")
-
-# Function to handle user login
-def login():
+def login(): # Function to handle user login
     username = input("Enter your username: ")
     password = input("Enter your password: ")
 
-    # Check if the username and password match the ones in user_credentials
-    if user_credentials.get(username) == password:
+    if user_credentials.get(username) == password: #Check if the username and password match the ones in user_credentials
         print("Login successful!")
         if user_roles.get(username) == 'admin':
             print("Welcome Admin! You have access to account information.")
@@ -67,8 +43,7 @@ def login():
             print("You have successfully logged in.")
         return username
 
-    # If not found in user_credentials, check the existing_users_file
-    if check_existing_users(username):
+    if check_existing_users(username): #If not found in user_credentials, it checks the existing_users_file
         with open(existing_users_file, "r") as file:
             for line in file:
                 parts = line.strip().split()
@@ -86,25 +61,30 @@ def login():
     print("Invalid username or password. Please try again.")
     return None
 
-# Function to register a new user
-def register():
-    username = input("Enter your username: ")
+def register(): #registers a new user account
+    while True:
+        username = input("Enter your username: ")
 
-    if check_existing_users(username):
-        print("Username already exists. Please choose another one.")
-        return
+        if check_existing_users(username):
+            print("Username already exists. Please choose another one.")
+        else:
+            break
 
     choice = input("Do you want to create your own password? (yes/no): ").lower()
     if choice in ['yes', 'y']:
-        password = input("Enter your password: ")
-        if len(password) < 10:
-            print("Password length needs to be a minimum of 10 characters")
-            return
+        while True:
+            password = input("Enter your password: ")
+            if len(password) < 10:
+                print("Password length needs to be a minimum of 10 characters")
+            else:
+                break #exits the loop if password is valid
     elif choice in ['no', 'n']:
-        length = int(input("Enter the length of the password: "))
-        if length < 10:
-            print("Password length needs to be a minimum of 10 characters")
-        return
+        while True:
+            length = int(input("Enter the length of the password: "))
+            if length < 10:
+                print("Password length needs to be a minimum of 10 characters")
+            else:
+                break #exits the loop if password is valid
 
         use_letters = input("Include letters? (yes/no): ").lower() in ['yes', 'y']
         use_numbers = input("Include numbers? (yes/no): ").lower() in ['yes', 'y']
@@ -114,13 +94,10 @@ def register():
         print("Your generated password is:", password)
     else:
         print("Invalid choice. Please enter 'yes' or 'no'.")
-        return
 
     save_user(username, password)
     print("Sign up successful!")
-
-# Main function to display the main menu and handle user choices
-def main_menu():
+def main_menu(): # Main function to display the main menu and handle user choices
     while True:
         print("\nWelcome to the Gelos Main Menu. Please select from one of the following:")
         print("A. Login")
@@ -140,25 +117,19 @@ def main_menu():
             break
         else:
             print("Invalid choice. Please enter a letter from A to C.")
-
-# Function to display logged-in user menu and handle user choices
-def logged_in_menu(username):
+def logged_in_menu(username): # Function to display logged-in user menu and handle user choices
     while True:
         print("\nGelos Logged In Menu:")
-        print("A. Change Password")
-        print("B. Return to Main Menu")
+        print("A. Return to Main Menu")
         choice = input("Enter your choice: ")
 
         if choice in ['A','a']:
-            change_password(username)
-        elif choice in ['B','b']:
             print("Returning to Main Menu...")
             break
         else:
             print("Invalid choice. Please enter A or B.")
 
-# Function to display admin menu and handle admin choices
-def admin_menu():
+def admin_menu(): # Function to display admin menu and handle admin choices
     while True:
         print("\nGelos Admin Menu:")
         print("A. View Accounts")
@@ -181,5 +152,4 @@ def admin_menu():
         else:
             print("Invalid choice. Please enter A or B.")
 
-# Call the main_menu function to start the program
-main_menu()
+main_menu() # Call the main_menu function to start the program
