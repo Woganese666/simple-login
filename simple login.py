@@ -19,6 +19,7 @@ user_roles = {'admin': 'admin'}
 # Function to generate a random password
 def generate_password(length=10, use_letters=True, use_digits=True, use_symbols=True):
     characters = ''
+
     if use_letters:
         characters += string.ascii_letters
     if use_digits:
@@ -94,13 +95,20 @@ def register():
         return
 
     choice = input("Do you want to create your own password? (yes/no): ").lower()
-    if choice == 'yes':
+    if choice in ['yes', 'y']:
         password = input("Enter your password: ")
-    elif choice == 'no':
+        if len(password) < 10:
+            print("Password length needs to be a minimum of 10 characters")
+            return
+    elif choice in ['no', 'n']:
         length = int(input("Enter the length of the password: "))
-        use_letters = input("Include letters? (yes/no): ").lower() == 'yes'
-        use_numbers = input("Include numbers? (yes/no): ").lower() == 'yes'
-        use_symbols = input("Include symbols? (yes/no): ").lower() == 'yes'
+        if length < 10:
+            print("Password length needs to be a minimum of 10 characters")
+        return
+
+        use_letters = input("Include letters? (yes/no): ").lower() in ['yes', 'y']
+        use_numbers = input("Include numbers? (yes/no): ").lower() in ['yes', 'y']
+        use_symbols = input("Include symbols? (yes/no): ").lower() in ['yes', 'y']
 
         password = generate_password(length, use_letters, use_numbers, use_symbols)
         print("Your generated password is:", password)
