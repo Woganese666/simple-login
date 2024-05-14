@@ -1,3 +1,5 @@
+#Bretts simple login code for Gelos 14.05.24
+
 import random #Importing the random module for generating random values
 import string #Importing the string module for string-related operations
 import time #Importing the time module for time-related operations
